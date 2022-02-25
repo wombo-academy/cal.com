@@ -19,6 +19,8 @@ output=`git submodule status --recursive` # get submodule info
 no_prefix=${output#*-} # get rid of the prefix
 COMMIT=${no_prefix% *} # get rid of the suffix
 
+echo $COMMIT
+
 # set up an empty temporary work directory
 rm -rf tmp || true # remove the tmp folder if exists
 mkdir tmp # create the tmp folder

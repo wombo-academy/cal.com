@@ -20,11 +20,11 @@ output=`git submodule status --recursive` # get submodule info
 echo $output
 # -378cbf8f3a67ea7877296f1da02edb2b6e3efbce apps/api -e0330f75d7cc499b490d7071d67c7761f5b9a6b3 apps/website
 
-IFS='-' read -r -a submodules <<< $output
+IFS='-' read -r -a submodules <<< "$output"
 
 for n in submodules
 do
-    echo "$n"
+    echo "submodule: $n"
 done
 
 no_prefix=${output#*-} # get rid of the prefix

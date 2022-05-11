@@ -372,7 +372,6 @@ const loggedInViewerRouter = createProtectedRouter()
       };
       const passedBookingsFilter = bookingListingFilters[bookingListingByStatus];
       const orderBy = bookingListingOrderby[bookingListingByStatus];
-
       const bookingsQuery = await prisma.booking.findMany({
         where: {
           OR: [
@@ -441,7 +440,7 @@ const loggedInViewerRouter = createProtectedRouter()
           endTime: booking.endTime.toISOString(),
         };
       });
-
+      const bookingsFetched = bookings.length;
       const seenBookings: Record<string, boolean> = {};
 
       // Remove duplicate recurring bookings for upcoming status.
@@ -462,7 +461,8 @@ const loggedInViewerRouter = createProtectedRouter()
       }
 
       let nextCursor: typeof skip | null = skip;
-      if (bookings.length > take) {
+
+      if (bookingsFetched > take) {
         bookings.shift();
         nextCursor += bookings.length;
       } else {

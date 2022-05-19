@@ -72,3 +72,7 @@ dist
 
 # Linting
 lint-results
+
+apps/admin
+apps/api
+apps/website

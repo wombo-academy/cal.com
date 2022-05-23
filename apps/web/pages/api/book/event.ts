@@ -243,8 +243,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const hasHashedBookingLink = reqBody.hasHashedBookingLink;
   const eventTypeSlug = reqBody.eventTypeSlug;
   const eventTypeId = reqBody.eventTypeId;
-  const tAttendees = await getTranslation(reqBody.language ?? "en", "common");
-  const tGuests = await getTranslation("en", "common");
+  const tAttendees = await getTranslation(reqBody.language ?? "es", "common");
+  const tGuests = await getTranslation("es", "common");
   log.debug(`Booking eventType ${eventTypeId} started`);
 
   const isTimeInPast = (time: string): boolean => {
@@ -296,7 +296,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     },
   });
 
-  const tOrganizer = await getTranslation(organizer?.locale ?? "en", "common");
+  const tOrganizer = await getTranslation(organizer?.locale ?? "es", "common");
 
   if (eventType.schedulingType === SchedulingType.ROUND_ROBIN) {
     const bookingCounts = await getUserNameWithBookingCounts(
@@ -312,7 +312,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email: reqBody.email,
       name: reqBody.name,
       timeZone: reqBody.timeZone,
-      language: { translate: tAttendees, locale: reqBody.language ?? "en" },
+      language: { translate: tAttendees, locale: reqBody.language ?? "es" },
     },
   ];
   const guests = (reqBody.guests || []).map((guest) => {
@@ -320,7 +320,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email: guest,
       name: "",
       timeZone: reqBody.timeZone,
-      language: { translate: tGuests, locale: "en" },
+      language: { translate: tGuests, locale: "es" },
     };
     return g;
   });
@@ -333,8 +333,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             name: user.name || "",
             timeZone: user.timeZone,
             language: {
-              translate: await getTranslation(user.locale ?? "en", "common"),
-              locale: user.locale ?? "en",
+              translate: await getTranslation(user.locale ?? "es", "common"),
+              locale: user.locale ?? "es",
             },
           };
         })
@@ -373,7 +373,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       name: users[0].name || "Nameless",
       email: users[0].email || "Email-less",
       timeZone: users[0].timeZone,
-      language: { translate: tOrganizer, locale: organizer?.locale ?? "en" },
+      language: { translate: tOrganizer, locale: organizer?.locale ?? "es" },
     },
     attendees: attendeesList,
     location: reqBody.location, // Will be processed by the EventManager later.

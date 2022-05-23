@@ -31,7 +31,6 @@ import getBusyTimes from "@lib/getBusyTimes";
 import prisma from "@lib/prisma";
 import { BookingCreateBody } from "@lib/types/booking";
 import sendPayload from "@lib/webhooks/sendPayload";
-import getSubscribers from "@lib/webhooks/subscriptions";
 
 import { getTranslation } from "@server/lib/i18n";
 
@@ -763,28 +762,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   log.debug(`Booking ${user.username} completed`);
 
   const eventTrigger: WebhookTriggerEvents = rescheduleUid ? "BOOKING_RESCHEDULED" : "BOOKING_CREATED";
-  const subscriberOptions = {
-    userId: user.id,
-    eventTypeId,
-    triggerEvent: eventTrigger,
-  };
 
   // Send Webhook call if hooked to BOOKING_CREATED & BOOKING_RESCHEDULED
-  const subscribers = await getSubscribers(subscriberOptions);
-  console.log("evt:", {
+  sendPayload(eventTrigger, new Date().toISOString(), {
     ...evt,
-    metadata: reqBody.metadata,
+    rescheduleUid,
+    metadata: {
+      ...reqBody.metadata,
+      price: eventType.price,
+      currency: eventType.currency,
+    },
+  }).catch((e) => {
+    console.error(`Error executing webhook for event: ${eventTrigger}`, e);
   });
-  const promises = subscribers.map((sub) =>
-    sendPayload(eventTrigger, new Date().toISOString(), sub, {
-      ...evt,
-      rescheduleUid,
-      metadata: reqBody.metadata,
-    }).catch((e) => {
-      console.error(`Error executing webhook for event: ${eventTrigger}, URL: ${sub.subscriberUrl}`, e);
-    })
-  );
-  await Promise.all(promises);
+
   // Avoid passing referencesToCreate with id unique constrain values
   // refresh hashed link if used
   const urlSeed = `${users[0].username}:${dayjs(req.body.start).utc().format()}`;

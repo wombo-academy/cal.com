@@ -2,7 +2,7 @@ import { IS_PRODUCTION, BASE_URL } from "@lib/config/constants";
 
 export const emailBodyLogo = (): string => {
   const image = IS_PRODUCTION
-    ? BASE_URL + "/emails/CalLogo@2x.png"
+    ? BASE_URL + "/emails/WomboLogo.png"
     : "https://app.cal.com/emails/CalLogo@2x.png";
 
   return `

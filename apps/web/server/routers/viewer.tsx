@@ -88,6 +88,7 @@ const loggedInViewerRouter = createProtectedRouter()
         darkBrandColor: user.darkBrandColor,
         plan: user.plan,
         away: user.away,
+        role: user.role,
       };
     },
   })

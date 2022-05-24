@@ -11,7 +11,7 @@ import {
   MoonIcon,
   ViewGridIcon,
 } from "@heroicons/react/solid";
-import { UserPlan } from "@prisma/client";
+import { UserPlan, UserPermissionRole } from "@prisma/client";
 import { SessionContextValue, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -113,16 +113,31 @@ export function ShellSubHeading(props: {
   );
 }
 
+type NavigationItem = {
+  name: string;
+  href: string;
+  icon: any;
+  current: boolean;
+  child?: Array<{ name: string; href: string; current: boolean }>;
+};
+
 const Layout = ({
+  role,
   status,
   plan,
   ...props
-}: LayoutProps & { status: SessionContextValue["status"]; plan?: UserPlan; isLoading: boolean }) => {
+}: LayoutProps & {
+  role?: UserPermissionRole;
+  status: SessionContextValue["status"];
+  plan?: UserPlan;
+  isLoading: boolean;
+}) => {
   const isEmbed = useIsEmbed();
   const router = useRouter();
 
   const { t } = useLocale();
-  const navigation = [
+
+  const navigation: Array<NavigationItem> = [
     {
       name: t("event_types_page_title"),
       href: "/event-types",
@@ -141,6 +156,8 @@ const Layout = ({
       icon: ClockIcon,
       current: router.asPath.startsWith("/availability"),
     },
+  ];
+  const adminNavigation = [
     {
       name: t("apps"),
       href: "/apps",
@@ -166,12 +183,16 @@ const Layout = ({
       current: router.asPath.startsWith("/settings"),
     },
   ];
+  if (role === UserPermissionRole.ADMIN) {
+    navigation.push(...adminNavigation);
+  }
+
   const pageTitle = typeof props.heading === "string" ? props.heading : props.title;
 
   return (
     <>
       <HeadSeo
-        title={pageTitle ?? "Cal.com"}
+        title={pageTitle ?? "Wombo.gg"}
         description={props.subtitle ? props.subtitle?.toString() : ""}
         nextSeoProps={{
           nofollow: true,
@@ -445,7 +466,7 @@ export default function Shell(props: LayoutProps) {
   return (
     <>
       <CustomBranding lightVal={user?.brandColor} darkVal={user?.darkBrandColor} />
-      <MemoizedLayout plan={user?.plan} status={status} {...props} isLoading={isLoading} />
+      <MemoizedLayout role={user?.role} plan={user?.plan} status={status} {...props} isLoading={isLoading} />
     </>
   );
 }
@@ -489,7 +510,7 @@ function UserDropdown({ small }: { small?: boolean }) {
                   {user?.username || "Nameless User"}
                 </span>
                 <span className="block truncate font-normal text-neutral-500">
-                  {user?.username ? `cal.com/${user.username}` : "No public page"}
+                  {user?.username ? `${WEBAPP_URL}/${user.username}` : "No public page"}
                 </span>
               </span>
               <SelectorIcon

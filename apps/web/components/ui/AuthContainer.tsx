@@ -18,7 +18,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
       <HeadSeo title={props.title} description={props.description} />
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {props.showLogo && (
-          <img className="mx-auto h-6" src="/calendso-logo-white-word.svg" alt="Cal.com Logo" />
+          <img className="mx-auto h-6" src="/calendso-logo-white-word.svg" alt="Wombo.gg Logo" />
         )}
         {props.heading && (
           <h2 className="font-cal mt-6 text-center text-3xl text-neutral-900">{props.heading}</h2>

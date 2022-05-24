@@ -7,8 +7,8 @@ export default function Logo({ small, icon }: { small?: boolean; icon?: boolean 
         ) : (
           <img
             className={small ? "h-4 w-auto" : "h-5 w-auto"}
-            alt="Cal"
-            title="Cal"
+            alt="Wombo"
+            title="Wombo"
             src="/calendso-logo-white-word.svg"
           />
         )}

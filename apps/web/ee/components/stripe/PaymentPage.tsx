@@ -58,7 +58,7 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
       <Theme />
       <Head>
         <title>
-          {t("payment")} | {eventName} | Cal.com
+          {t("payment")} | {eventName} | Wombo.gg
         </title>
         <link rel="icon" href="/favicon.ico" />
       </Head>

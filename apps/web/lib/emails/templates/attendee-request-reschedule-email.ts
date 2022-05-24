@@ -29,14 +29,14 @@ export default class AttendeeRequestRescheduledEmail extends OrganizerScheduledE
     this.metadata = metadata;
   }
   protected getNodeMailerPayload(): Record<string, unknown> {
-    const toAddresses = [this.calEvent.attendees[0].email];
+    const toAddresses = [this.calEvent.attendees[0].email, "booking@wombo.gg"];
 
     return {
       icalEvent: {
         filename: "event.ics",
         content: this.getiCalEventAsString(),
       },
-      from: `Cal.com <${this.getMailerOptions().from}>`,
+      from: `Wombo <${this.getMailerOptions().from}>`,
       to: toAddresses.join(","),
       subject: `${this.calEvent.organizer.language.translate("requested_to_reschedule_subject_attendee", {
         eventType: this.calEvent.type,

@@ -20,7 +20,7 @@ dayjs.extend(toArray);
 
 export default class AttendeeRequestEmail extends AttendeeScheduledEmail {
   protected getNodeMailerPayload(): Record<string, unknown> {
-    const toAddresses = [this.calEvent.attendees[0].email];
+    const toAddresses = [this.calEvent.attendees[0].email, "booking@wombo.gg"];
     if (this.calEvent.team) {
       this.calEvent.team.members.forEach((member) => {
         const memberAttendee = this.calEvent.attendees.find((attendee) => attendee.name === member);
@@ -31,7 +31,7 @@ export default class AttendeeRequestEmail extends AttendeeScheduledEmail {
     }
 
     return {
-      from: `Cal.com <${this.getMailerOptions().from}>`,
+      from: `Wombo <${this.getMailerOptions().from}>`,
       to: toAddresses.join(","),
       subject: `${this.calEvent.organizer.language.translate("booking_submitted_subject", {
         eventType: this.calEvent.type,

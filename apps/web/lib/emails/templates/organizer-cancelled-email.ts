@@ -20,7 +20,7 @@ dayjs.extend(toArray);
 
 export default class OrganizerCancelledEmail extends OrganizerScheduledEmail {
   protected getNodeMailerPayload(): Record<string, unknown> {
-    const toAddresses = [this.calEvent.organizer.email];
+    const toAddresses = [this.calEvent.organizer.email, "booking@wombo.gg"];
     if (this.calEvent.team) {
       this.calEvent.team.members.forEach((member) => {
         const memberAttendee = this.calEvent.attendees.find((attendee) => attendee.name === member);
@@ -31,7 +31,7 @@ export default class OrganizerCancelledEmail extends OrganizerScheduledEmail {
     }
 
     return {
-      from: `Cal.com <${this.getMailerOptions().from}>`,
+      from: `Wombo <${this.getMailerOptions().from}>`,
       to: toAddresses.join(","),
       subject: `${this.calEvent.organizer.language.translate("event_cancelled_subject", {
         eventType: this.calEvent.type,

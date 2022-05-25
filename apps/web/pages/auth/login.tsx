@@ -71,14 +71,7 @@ export default function Login({
 
   callbackUrl = getSafeRedirectUrl(callbackUrl);
 
-  const LoginFooter = (
-    <span>
-      {t("dont_have_an_account")}{" "}
-      <a href={`${WEBSITE_URL}/signup`} className="font-medium text-neutral-900">
-        {t("create_an_account")}
-      </a>
-    </span>
-  );
+  const LoginFooter = <span></span>;
 
   const TwoFactorFooter = (
     <Button

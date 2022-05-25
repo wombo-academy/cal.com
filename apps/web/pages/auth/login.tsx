@@ -128,13 +128,6 @@ export default function Login({
               {...form.register("email")}
             />
             <div className="relative">
-              <div className="absolute right-0 -top-[2px]">
-                <Link href="/auth/forgot-password">
-                  <a tabIndex={-1} className="text-primary-600 text-sm font-medium">
-                    {t("forgot")}
-                  </a>
-                </Link>
-              </div>
               <PasswordField
                 id="password"
                 type="password"

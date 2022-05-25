@@ -10,6 +10,7 @@ import Button from "@calcom/ui/Button";
 import { useLocale } from "@lib/hooks/useLocale";
 
 const CARD_OPTIONS: stripejs.StripeCardElementOptions = {
+  hidePostalCode: true,
   iconStyle: "solid" as const,
   classes: {
     base: "block p-2 w-full border-solid border-2 border-gray-300 rounded-md shadow-sm dark:bg-black dark:text-white dark:border-black focus-within:ring-black focus-within:border-black sm:text-sm",
@@ -35,6 +36,7 @@ type Props = {
   eventType: { id: number };
   user: { username: string | null };
   location?: string | null;
+  bookingId: number;
 };
 
 type States =
@@ -86,6 +88,7 @@ export default function PaymentComponent(props: Props) {
         type: props.eventType.id,
         user: props.user.username,
         name,
+        bookingId: props.bookingId,
       };
 
       if (props.location) {

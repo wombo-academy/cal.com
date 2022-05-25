@@ -767,10 +767,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (typeof eventType.price === "number" && eventType.price > 0 && !originalRescheduledBooking?.paid) {
     try {
-      const [firstStripeCredential] = user.credentials.filter((cred) => cred.type == "stripe_payment");
-
       if (!booking.user) booking.user = user;
-      const payment = await handlePayment(evt, eventType, firstStripeCredential, booking);
+      const payment = await handlePayment(evt, eventType, booking);
 
       res.status(201).json({ ...booking, message: "Payment required", paymentUid: payment.uid });
       return;

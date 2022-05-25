@@ -1670,7 +1670,7 @@ const EventTypePage = (props: inferSSRProps<typeof getServerSideProps>) => {
                         <SuccessRedirectEdit<typeof formMethods>
                           formMethods={formMethods}
                           eventType={eventType}></SuccessRedirectEdit>
-                        {hasPaymentIntegration && eventType.recurringEvent?.count !== undefined && (
+                        {hasPaymentIntegration && (
                           <>
                             <hr className="border-neutral-200" />
                             <div className="block sm:flex">
@@ -1701,19 +1701,6 @@ const EventTypePage = (props: inferSSRProps<typeof getServerSideProps>) => {
                                             className="text-primary-600  h-4 w-4 rounded border-gray-300"
                                             defaultChecked={requirePayment}
                                           />
-                                        </div>
-                                        <div className="text-sm ltr:ml-3 rtl:mr-3">
-                                          <p className="text-neutral-900">
-                                            {t("require_payment")} (0.5% +{" "}
-                                            <IntlProvider locale="en">
-                                              <FormattedNumber
-                                                value={0.1}
-                                                style="currency"
-                                                currency={currency}
-                                              />
-                                            </IntlProvider>{" "}
-                                            {t("commission_per_transaction")})
-                                          </p>
                                         </div>
                                       </div>
                                     </div>
@@ -2192,10 +2179,8 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
   const t = await getTranslation(currentUser?.locale ?? "en", "common");
   const integrations = getApps(credentials);
   const locationOptions = getLocationOptions(integrations, t);
-  const hasPaymentIntegration = !!credentials.find((credential) => credential.type === "stripe_payment");
-  const currency =
-    (credentials.find((integration) => integration.type === "stripe_payment")?.key as unknown as StripeData)
-      ?.default_currency || "usd";
+  const hasPaymentIntegration = true;
+  const currency = "usd";
 
   type Availability = typeof eventType["availability"];
   const getAvailability = (availability: Availability) =>

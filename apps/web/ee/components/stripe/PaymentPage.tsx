@@ -131,12 +131,13 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
                     <div className="mt-4 text-center text-gray-700 dark:text-gray-300">{t("paid")}</div>
                   )}
                   {!props.payment.success && (
-                    <Elements stripe={getStripe(props.payment.data.stripe_publishable_key)}>
+                    <Elements stripe={getStripe()}>
                       <PaymentComponent
                         payment={props.payment}
                         eventType={props.eventType}
                         user={props.user}
                         location={props.booking.location}
+                        bookingId={props.booking.id}
                       />
                     </Elements>
                   )}

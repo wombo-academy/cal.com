@@ -1,19 +1,19 @@
 import { Stripe } from "@stripe/stripe-js";
 import { loadStripe } from "@stripe/stripe-js/pure";
 import { stringify } from "querystring";
+import { STRIPE_PUBLIC_KEY } from "@calcom/lib/constants";
 
 export type Maybe<T> = T | undefined | null;
 
-const stripePublicKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!;
 let stripePromise: Promise<Stripe | null>;
 
 /**
  * This is a singleton to ensure we only instantiate Stripe once.
  */
-const getStripe = (userPublicKey?: string) => {
+const getStripe = () => {
   if (!stripePromise) {
     stripePromise = loadStripe(
-      userPublicKey || stripePublicKey /* , {
+      STRIPE_PUBLIC_KEY /* , {
       locale: "es-419" TODO: Handle multiple locales,
     } */
     );

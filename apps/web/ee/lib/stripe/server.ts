@@ -2,6 +2,7 @@ import { PaymentType, Prisma } from "@prisma/client";
 import Stripe from "stripe";
 import { v4 as uuidv4 } from "uuid";
 
+import { STRIPE_PUBLIC_KEY } from "@calcom/lib/constants";
 import { getErrorFromUnknown } from "@calcom/lib/errors";
 import prisma from "@calcom/prisma";
 import { createPaymentLink } from "@calcom/stripe/client";
@@ -16,16 +17,12 @@ export type PaymentInfo = {
   id?: string | null;
 };
 
-const paymentFeePercentage = process.env.PAYMENT_FEE_PERCENTAGE!;
-const paymentFeeFixed = process.env.PAYMENT_FEE_FIXED!;
-
 export async function handlePayment(
   evt: CalendarEvent,
   selectedEventType: {
     price: number;
     currency: string;
   },
-  stripeCredential: { key: Prisma.JsonValue },
   booking: {
     user: { email: string | null; name: string | null; timeZone: string } | null;
     id: number;
@@ -33,19 +30,16 @@ export async function handlePayment(
     uid: string;
   }
 ) {
-  const paymentFee = Math.round(
-    selectedEventType.price * parseFloat(`${paymentFeePercentage}`) + parseInt(`${paymentFeeFixed}`)
-  );
-  const { stripe_user_id, stripe_publishable_key } = stripeCredential.key as Stripe.OAuthToken;
+  const stripe_publishable_key = STRIPE_PUBLIC_KEY!;
 
   const params: Stripe.PaymentIntentCreateParams = {
     amount: selectedEventType.price,
     currency: selectedEventType.currency,
     payment_method_types: ["card"],
-    application_fee_amount: paymentFee,
+    description: evt.title,
   };
 
-  const paymentIntent = await stripe.paymentIntents.create(params, { stripeAccount: stripe_user_id });
+  const paymentIntent = await stripe.paymentIntents.create(params);
 
   const payment = await prisma.payment.create({
     data: {
@@ -57,13 +51,12 @@ export async function handlePayment(
         },
       },
       amount: selectedEventType.price,
-      fee: paymentFee,
+      fee: 0,
       currency: selectedEventType.currency,
       success: false,
       refunded: false,
       data: Object.assign({}, paymentIntent, {
         stripe_publishable_key,
-        stripeAccount: stripe_user_id,
       }) /* We should treat this */ as PaymentData /* but Prisma doesn't know how to handle it, so it we treat it */ as unknown /* and then */ as Prisma.InputJsonValue,
       externalId: paymentIntent.id,
     },

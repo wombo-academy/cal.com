@@ -35,7 +35,12 @@ async function handlePaymentSuccess(event: Stripe.Event) {
   if (!payment?.bookingId) {
     console.log(JSON.stringify(paymentIntent), JSON.stringify(payment));
   }
-  if (!payment?.bookingId) throw new Error("Payment not found");
+  if (!payment?.bookingId) {
+    throw new HttpCode({
+      statusCode: 202,
+      message: `Unhandled Stripe Payment Intent ${paymentIntent.id}`,
+    });
+  }
 
   const booking = await prisma.booking.findUnique({
     where: {
